@@ -19,36 +19,26 @@
 # http://numenta.org/licenses/
 # ----------------------------------------------------------------------
 
-"""This script is a command-line client of Online Prediction Framework (OPF).
-It executes a single experiment.
-"""
+## This file defines parameters for a prediction experiment.
 
+import os
+from nupic.frameworks.opf.expdescriptionhelpers import importBaseDescription
 
-import sys
+# the sub-experiment configuration
+config = \
+{ 
+  'dataSource': 'file://' + os.path.join(os.path.dirname(__file__), 
+                                         '../datasets/category_1.csv'),
+  'errorMetric': 'avg_err',
 
-from nupic.frameworks.opf.experiment_runner import (runExperiment,
-                                                    initExperimentPrng)
-import nupic.support
+  'modelParams': { 
+    'sensorParams': { 'verbosity': 0},
+    'clParams': { 
+      'clVerbosity': 0,
+      'implementation': 'py'
+    },
+  }
+}
 
-
-
-def main():
-  """Run according to options in sys.argv"""
-  # Init the NuPic logging configuration from the nupic-logging.conf configuration
-  # file. This is found either in the NTA_CONF_DIR directory (if defined) or
-  # in the 'conf' subdirectory of the NuPic install location.
-  nupic.support.initLogging(verbose=True)
-
-  # Initialize pseudo-random number generators (PRNGs)
-  #
-  # This will fix the seed that is used by numpy when generating 'random'
-  # numbers. This allows for repeatability across experiments.
-  initExperimentPrng()
-
-  # Run it!
-  runExperiment(sys.argv[1:])
-
-
-
-if __name__ == "__main__":
-  main()
+mod = importBaseDescription('../base/description.py', config)
+locals().update(mod.__dict__)

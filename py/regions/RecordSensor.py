@@ -192,6 +192,7 @@ class RecordSensor(PyRegion):
     Create a node without an encoder or datasource
     """
     self.encoder = None
+    self.disabledEncoder = None
     self.dataSource = None
     self._outputValues = {}
 
@@ -203,6 +204,11 @@ class RecordSensor(PyRegion):
 
     # lastRecord is the last record returned. Used for debugging only
     self.lastRecord = None
+
+  def __setstate__(self, state):
+    # Default value for older versions being deserialized.
+    self.disabledEncoder = None
+    self.__dict__.update(state)
 
   def initialize(self, dims, splitterMaps):
     if self.encoder is None:
