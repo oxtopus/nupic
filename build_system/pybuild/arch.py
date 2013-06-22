@@ -38,9 +38,9 @@ def getArch() :
     # uname -p may also return "athlon" or other random words. 
     # 
     cpu = platform.machine()
-    if cpu not in ["i686", "i386", "x86_64"]:
+    if cpu not in ["armv6l", "i686", "i386", "x86_64"]:
       cpu = platform.processor()
-    if cpu in ["i686", "i386"]:
+    if cpu in ["armv6l", "i686", "i386"]:
       return "linux32"
     elif cpu == "x86_64":
       return "linux64"
