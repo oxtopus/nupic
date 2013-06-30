@@ -7,6 +7,8 @@ NuPIC is a library that provides the building blocks for online prediction syste
 
 For more information, see [numenta.org](http://numenta.org).
 
+Issue tracker at [issues.numenta.org](https://issues.numenta.org/browse/NPC).
+
 OPF Basics
 ----------
 
@@ -21,7 +23,7 @@ __Clients__ take input data and feed it through encoders, models, and metrics an
 Installation
 ------------
 
-NuPIC requires Python 2.6 (with development headers), GCC (4.6-4.8), and Make.
+NuPIC requires Python (2.6-2.7) (with development headers), GCC (4.6-4.8), and Make.
 
 Add the following to your .bashrc file. Change the paths as needed.
 
