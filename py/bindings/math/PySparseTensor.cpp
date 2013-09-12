@@ -24,7 +24,8 @@
 /** @file 
  */
 
-#include <python2.6/Python.h>
+#include <Python.h>
+
 #include <lang/py/support/NumpyVector.hpp>
 #include <py/bindings/math/PySparseTensor.hpp>
 

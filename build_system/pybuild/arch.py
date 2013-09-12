@@ -20,13 +20,12 @@
 # ----------------------------------------------------------------------
 
 import sys
-import os
 import platform
 
 def getArch() :
   """
   Return the NuPIC architecture name.
-  Note that this is redundant with the calculation in configure.ac
+  Note that this is redundant with the calculation in configure.ac (<-- TODO so remove?) 
   """
   if sys.platform == "linux2":
     #
