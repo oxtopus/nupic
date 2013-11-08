@@ -2,9 +2,6 @@ branches:
   except:
     - gh-pages
 language: python
-compiler:
-  - gcc
-  - clang
 python:
   - "2.6"
   - "2.7"
