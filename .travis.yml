@@ -39,9 +39,9 @@ before_install:
   - git clone https://github.com/numenta/nupic-linux64.git
   - (cd nupic-linux64 && git reset --hard 9e4df07ee03184d670a8801b76f206785e2a8b2e)
   - source nupic-linux64/bin/activate
+  - if [ "$CC" = "gcc" ]; then export CXX=g++; fi
+  - if [ "$CC" = "clang" ]; then export CXX=clang++; fi
   - printenv | sort
-  - if [ $CC = "gcc" ]; then export CXX=g++ fi
-  - if [ $CC = "clang" ]; then export CXX=clang++ fi
   - gem install travis-artifacts
 
 install:
