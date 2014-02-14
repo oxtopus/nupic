@@ -47,7 +47,7 @@ before_install:
   - travis_retry gem install travis-artifacts > /dev/null
 
 install:
-  - if [ $PY_VERSION != "2.6" ]; then (cd nupic-linux64/ && mkdir -p lib/python${PY_VERSION}/site-packages && make > /dev/null) fi
+  - (cd nupic-linux64/ && mkdir -p lib/python${PY_VERSION}/site-packages && make > /dev/null)
   # Workaround for multiprocessing.Queue SemLock error from run_opf_bechmarks_test.
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
