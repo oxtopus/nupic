@@ -1,57 +1,54 @@
-FROM ubuntu
+FROM centos:latest
+MAINTAINER Austin Marshall <amarshall@numenta.com>
 
-MAINTAINER Allan Costa <allaninocencio@yahoo.com.br>
+RUN rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
-# Install dependencies
-RUN \
-    echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list;\
-    apt-get update;\
-    apt-get install -y wget;\
-    apt-get install -y git-core;\
-    apt-get install -y build-essential;\
-    apt-get install -y python2.7;\
-    apt-get install -y python-dev;\
-    apt-get install -y libtool;\
-    apt-get install -y automake;\
-    apt-get install -y cmake;\
-    wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python;\
-    wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python;\
-#RUN
+# Install required yum packages
+RUN yum groupinstall -y "Development tools"
+RUN yum install -y clang zlib-devel install bzip2-devel openssl-devel ncurses-devel cmake28 python-devel python-pip openssh-server sudo libyaml wget
 
-# Set enviroment variables needed by NuPIC builder
-ENV NTA /usr/bin/nta/eng
+# Use clang
+ENV CC clang
+ENV CXX clang++
+
+# Download, build, and install Python 2.7
+WORKDIR /usr/local/src
+RUN wget --no-check-certificate https://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz
+RUN tar xf Python-2.7.6.tar.xz
+WORKDIR /usr/local/src/Python-2.7.6
+RUN ./configure --prefix=/usr/local --enable-shared
+RUN make && make altinstall
+
+# Make newly compile Python the default
+ENV LD_LIBRARY_PATH /usr/local/lib
+ENV PYTHONPATH /usr/local/lib/python2.7/site-packages
+RUN ln -s /usr/local/bin/python2.7 /usr/local/bin/python
+
+# Download, build, and install setuptools
+RUN wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+RUN /usr/local/bin/python2.7 ez_setup.py
+RUN /usr/local/bin/easy_install-2.7 pip
+
+# Set NuPIC environment
 ENV NUPIC /usr/local/src/nupic
-ENV BUILDDIR /tmp/ntabuild
-
-# Clone NuPIC repository (takes some time)
-RUN git clone https://github.com/numenta/nupic.git $NUPIC
-
-# More enviroment variables (setted originally by $NUPIC/env.sh)
-ENV PY_VERSION 2.7
-ENV PATH $NTA/bin:$PATH
-ENV PYTHONPATH $NTA/lib/python$PY_VERSION/site-packages:$PYTHONPATH
+ENV NTA $NUPIC/build/release
 ENV NTA_ROOTDIR $NTA
-ENV NTA_DATA_PATH $NTA/share/prediction/data:$NTA_DATA_PATH
+ENV PYTHONPATH $PYTHONPATH:$NTA/lib/python2.7/site-packages
+ENV BUILDDIR /tmp/ntabuild
+ENV PY_VERSION 2.7
+ENV NTA_DATA_PATH $NTA/share/prediction/data
 ENV LDIR $NTA/lib
-ENV LD_LIBRARY_PATH $LDIR
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$LDIR
+ENV USER root
+ENV PYTHON /usr/local/bin/python2.7
 
 # Install Python dependencies
-RUN pip install --allow-all-external --allow-unverified PIL --allow-unverified  psutil -r $NUPIC/external/common/requirements.txt
+RUN git clone https://github.com/numenta/nupic.git /usr/local/src/nupic
+WORKDIR /usr/local/src/nupic
+RUN pip install --allow-all-external --allow-unverified PIL --allow-unverified  psutil -r external/common/requirements.txt
 
-# Install Nupic with CMAKE
-# Generate make files with cmake
-RUN mkdir $NUPIC/build_system
-WORKDIR $NUPIC/build_system
-RUN cmake $NUPIC
-
-# Build with max 3 jobs/threads
-RUN make -j3
-
-# Cleanup
-RUN rm /setuptools*
-
-# OPF needs this (It's a workaround. We can create a user, but I wanted to keep this image clean to use as base to my projects)
-ENV USER docker
-
-# Default directory
-WORKDIR /home/docker
+# Build and install NuPIC
+RUN mkdir -p /usr/local/src/nupic/build/scripts
+WORKDIR /usr/local/src/nupic/build/scripts
+RUN cmake28 -DPYTHON_LIBRARY=/usr/local/lib/libpython2.7.so /usr/local/src/nupic
+RUN make
