@@ -31,7 +31,7 @@ before_install:
   # build, and install, python, setuptools, pip, and all of the nupic python
   # dependencies
   - sudo apt-get update
-  - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev
+  - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev libreadline-dev
   - (wget https://www.python.org/ftp/python/$PY_VER_FULL/Python-$PY_VER_FULL.tgz && tar xzf Python-$PY_VER_FULL.tgz && cd Python-$PY_VER_FULL && ./configure --enable-shared --prefix=${TRAVIS_BUILD_DIR}/python && make && make altinstall)
 
 install:
