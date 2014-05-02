@@ -41,9 +41,8 @@ install:
   # Install setuptools + pip
   - wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python > /dev/null
   # Install NuPIC python dependencies
-  - pip install virtualenv --install-option="--prefix=$TRAVIS_BUILD_DIR/python" --install-option="--script-dir=$TRAVIS_BUILD_DIR/python/bin"
-  - ls -laFh $TRAVIS_BUILD_DIR/python/bin
-  - virtualenv --python=$TRAVIS_BUILD_DIR/python/bin/python .
+  - ls -laFh /usr/local/bin/v*
+  - /usr/local/bin/virtualenv --python=$TRAVIS_BUILD_DIR/python/bin/python .
   - source bin/activate
   - pip install -q -r $NUPIC/external/common/requirements.txt
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
