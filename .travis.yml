@@ -42,7 +42,7 @@ install:
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
   # Install setuptools + pip
-  - (wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz && tar xzvf setuptools-3.4.4.tar.gz && cd setuptools-3.4.4 && python setup.py install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin)
+  - (wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz && tar xzvf setuptools-3.4.4.tar.gz && cd setuptools-3.4.4 && python setup.py install --prefix=$TRAVIS_BUILD_DIR/python)
   - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin pip
   # Install NuPIC python dependencies
   - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
