@@ -8,10 +8,6 @@ compiler:
   - clang
   - gcc
 
-matrix:
-  - PY_VER_FULL=2.7.6 PY_VER_SHORT=2.7
-  - PY_VER_FULL=2.6.9 PY_VER_SHORT=2.6
-
 git:
   submodules: false
 
@@ -20,6 +16,9 @@ env:
     - NUPIC=$TRAVIS_BUILD_DIR
     - NTA=$HOME/nta/eng
     - PATH=$TRAVIS_BUILD_DIR/python/bin:$PATH
+  matrix:
+    - PY_VER_FULL=2.7.6 PY_VER_SHORT=2.7
+    - PY_VER_FULL=2.6.9 PY_VER_SHORT=2.6
 
 notifications:
   irc:
@@ -31,6 +30,7 @@ before_install:
   # Due to recent changes to Travis-CI build environment, we need to download,
   # build, and install, python, setuptools, pip, and all of the nupic python
   # dependencies
+  - sudo apt-get install zlib1g-dev
   - (wget https://www.python.org/ftp/python/$PY_VER_FULL/Python-$PY_VER_FULL.tgz && tar xzf Python-$PY_VER_FULL.tgz && cd Python-$PY_VER_FULL && ./configure --enable-shared --prefix=${TRAVIS_BUILD_DIR}/python && make > /dev/null && make altinstall)
 
 install:
