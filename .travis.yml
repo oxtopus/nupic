@@ -1,9 +1,12 @@
 branches:
   except:
     - gh-pages
-language: python
-python:
-  - "2.7"
+
+language: cpp
+
+compiler:
+  - clang
+  - gcc
 
 git:
   submodules: false
@@ -13,10 +16,6 @@ env:
     - NUPIC=$TRAVIS_BUILD_DIR
     - NTA=$HOME/nta/eng
     - PATH=$TRAVIS_BUILD_DIR/python/bin:$PATH
-
-  matrix:
-    - CC=clang CXX=clang++
-    - CC=gcc CXX=g++
 
 notifications:
   irc:
