@@ -30,8 +30,9 @@ before_install:
   # Due to recent changes to Travis-CI build environment, we need to download,
   # build, and install, python, setuptools, pip, and all of the nupic python
   # dependencies
+  - sudo apt-get update
   - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev
-  - (wget https://www.python.org/ftp/python/$PY_VER_FULL/Python-$PY_VER_FULL.tgz && tar xzf Python-$PY_VER_FULL.tgz && cd Python-$PY_VER_FULL && ./configure --enable-shared --prefix=${TRAVIS_BUILD_DIR}/python && make > /dev/null && make altinstall)
+  - (wget https://www.python.org/ftp/python/$PY_VER_FULL/Python-$PY_VER_FULL.tgz && tar xzf Python-$PY_VER_FULL.tgz && cd Python-$PY_VER_FULL && ./configure --enable-shared --prefix=${TRAVIS_BUILD_DIR}/python && make && make altinstall)
 
 install:
   # Prefix env with our own python installation
