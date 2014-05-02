@@ -47,7 +47,7 @@ install:
   - ls -laFh $TRAVIS_BUILD_DIR/python/bin
   - virtualenv --python=$TRAVIS_BUILD_DIR/python/bin/python .
   - source bin/activate
-  - pip install -q -r $NUPIC/external/common/requirements.txt
+  - pip install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
   - "cd $TRAVIS_BUILD_DIR/build/scripts"
   - "cmake --version"
