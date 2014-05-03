@@ -29,10 +29,8 @@ notifications:
 before_install:
   - sudo add-apt-repository -y ppa:fkrull/deadsnakes
   - sudo apt-get update
-  - sudo apt-get install -s python$PY_VER-dev
   - sudo apt-get install python$PY_VER python$PY_VER-dev python-virtualenv
-  - sudo ls -laFh /usr/local/lib
-  - sudo ls -laFh /usr/lib
+  - sudo ls -laFh /usr/lib/libpython$PY_VER.so
   # Prefix env with our own python installation
   - "export PYTHONPATH=$PYTHONPATH:$NTA/lib/python$PY_VER/site-packages"
   - virtualenv --python=`which python$PY_VER` .
@@ -48,7 +46,7 @@ install:
   - "cd $TRAVIS_BUILD_DIR/build/scripts"
   - "cmake --version"
   # Build NuPIC
-  - "PYTHON=`which python$PY_VER` cmake $NUPIC -DPROJECT_BUILD_RELEASE_DIR:STRING=$NTA"
+  - "PYTHON=`which python$PY_VER` cmake $NUPIC -DPYTHON_LIBRARY=/usr/lib/libpython$PY_VER.so -DPROJECT_BUILD_RELEASE_DIR:STRING=$NTA"
   - "make -j3"
   - "cd"
 
