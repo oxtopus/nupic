@@ -53,7 +53,7 @@ install:
   # - (wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz && tar xzvf setuptools-3.4.4.tar.gz && cd setuptools-3.4.4 && python setup.py install --prefix=$TRAVIS_BUILD_DIR/python)
   # - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin pip
   # Install NuPIC python dependencies
-  - easy_install-$PY_VER_SHORT --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
+  - easy_install-$PY_VER --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
   - virtualenv-$PY_VER --python=$TRAVIS_BUILD_DIR/python/bin/python .
   - source bin/activate
   - pip-$PY_VER install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
