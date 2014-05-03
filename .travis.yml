@@ -30,6 +30,8 @@ before_install:
   - sudo add-apt-repository -y ppa:fkrull/deadsnakes
   - sudo apt-get update
   - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev libreadline-dev python$PY_VER python$PY_VER-dev
+
+install:
   # Prefix env with our own python installation
   - mkdir -p $TRAVIS_BUILD_DIR/python/bin
   - mkdir -p $TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages
@@ -46,8 +48,6 @@ before_install:
   # Workaround for multiprocessing.Queue SemLock error from run_opf_bechmarks_test.
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
-
-install:
   # Install NuPIC python dependencies
   - pip$PY_VER install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
