@@ -29,22 +29,16 @@ notifications:
 before_install:
   - sudo add-apt-repository -y ppa:fkrull/deadsnakes
   - sudo apt-get update
-  - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev libreadline-dev python$PY_VER python$PY_VER-dev python-virtualenv
+  - sudo apt-get install python$PY_VER python$PY_VER-dev python-virtualenv
   # Prefix env with our own python installation
-  - mkdir -p $TRAVIS_BUILD_DIR/python/bin
-  - mkdir -p $TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages
-  - "export PATH=$TRAVIS_BUILD_DIR/python/bin:$PATH"
-  - "export PYTHONPATH=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages:$PYTHONPATH:$NTA/lib/python$PY_VER/site-packages"
-  - "export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/python/lib:$LD_LIBRARY_PATH"
-  - which python$PY_VER
-  - python$PY_VER --version
+  - "export PYTHONPATH=$PYTHONPATH:$NTA/lib/python$PY_VER/site-packages"
   - virtualenv --python=`which python$PY_VER` .
   - source bin/activate
   # Workaround for multiprocessing.Queue SemLock error from run_opf_bechmarks_test.
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
   # Install NuPIC python dependencies
-  - pip install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
+  - pip install -q -r $NUPIC/external/common/requirements.txt
 
 install:
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
