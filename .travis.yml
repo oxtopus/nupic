@@ -1,3 +1,5 @@
+cache: apt
+
 branches:
   except:
     - gh-pages
@@ -7,9 +9,6 @@ language: cpp
 compiler:
   - clang
   - gcc
-
-git:
-  submodules: false
 
 env:
   global:
