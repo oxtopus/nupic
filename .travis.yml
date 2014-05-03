@@ -46,7 +46,7 @@ install:
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
   # Install NuPIC python dependencies
-  - pip$PY_VER install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
+  - pip install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
   - "cd $TRAVIS_BUILD_DIR/build/scripts"
   - "cmake --version"
