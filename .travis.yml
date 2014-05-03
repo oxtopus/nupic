@@ -54,7 +54,7 @@ install:
   # - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin pip
   # Install NuPIC python dependencies
   - easy_install-$PY_VER --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
-  - virtualenv-$PY_VER --python=$TRAVIS_BUILD_DIR/python/bin/python .
+  - virtualenv-$PY_VER --python=`which python$PY_VER` .
   - source bin/activate
   - pip-$PY_VER install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
