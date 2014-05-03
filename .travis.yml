@@ -29,6 +29,7 @@ notifications:
 before_install:
   - sudo add-apt-repository -y ppa:fkrull/deadsnakes
   - sudo apt-get update
+  - sudo apt-get install --dry-run python$PY_VER-dev
   - sudo apt-get install python$PY_VER python$PY_VER-dev python-virtualenv
   # Prefix env with our own python installation
   - "export PYTHONPATH=$PYTHONPATH:$NTA/lib/python$PY_VER/site-packages"
