@@ -40,9 +40,6 @@ install:
   - "export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/python/lib:$LD_LIBRARY_PATH"
   - which python$PY_VER
   - python$PY_VER --version
-  # Install setuptools + pip
-  - wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python$PY_VER
-  - easy_install-$PY_VER --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
   - virtualenv-$PY_VER --python=`which python$PY_VER` .
   - source bin/activate
   # Workaround for multiprocessing.Queue SemLock error from run_opf_bechmarks_test.
