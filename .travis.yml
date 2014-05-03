@@ -31,6 +31,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -s python$PY_VER-dev
   - sudo apt-get install python$PY_VER python$PY_VER-dev python-virtualenv
+  - sudo ls -laFh /usr/local/lib
+  - sudo ls -laFh /usr/lib
   # Prefix env with our own python installation
   - "export PYTHONPATH=$PYTHONPATH:$NTA/lib/python$PY_VER/site-packages"
   - virtualenv --python=`which python$PY_VER` .
