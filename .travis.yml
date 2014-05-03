@@ -17,8 +17,8 @@ env:
     - NTA=$HOME/nta/eng
     - PATH=$TRAVIS_BUILD_DIR/python/bin:$PATH
   matrix:
-    - PY_VER_FULL=2.7.6 PY_VER_SHORT=2.7
-    - PY_VER_FULL=2.6.9 PY_VER_SHORT=2.6
+    - PY_VER=2.7
+    - PY_VER=2.6
 
 notifications:
   irc:
@@ -30,26 +30,30 @@ before_install:
   # Due to recent changes to Travis-CI build environment, we need to download,
   # build, and install, python, setuptools, pip, and all of the nupic python
   # dependencies
-  - sudo add-apt-repository ppa:fkrull/deadsnakes
+  - sudo add-apt-repository -y ppa:fkrull/deadsnakes
   - sudo apt-get update
-  - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev libreadline-dev python$PY_VER_SHORT python$PY_VER_SHORT-dev
-  - (wget https://www.python.org/ftp/python/$PY_VER_FULL/Python-$PY_VER_FULL.tgz && tar xzf Python-$PY_VER_FULL.tgz && cd Python-$PY_VER_FULL && ./configure --enable-shared --prefix=${TRAVIS_BUILD_DIR}/python && make && make altinstall)
+  - sudo apt-get install libbz2-dev zlib1g-dev libssl-dev libsasl2-dev libreadline-dev python$PY_VER python$PY_VER-dev
+  #- (wget https://www.python.org/ftp/python/$PY_VER_FULL/Python-$PY_VER_FULL.tgz && tar xzf Python-$PY_VER_FULL.tgz && cd Python-$PY_VER_FULL && ./configure --enable-shared --prefix=${TRAVIS_BUILD_DIR}/python && make && make altinstall)
 
 install:
   # Prefix env with our own python installation
+  - mkdir -p $TRAVIS_BUILD_DIR/python/bin
+  - mkdir -p $TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages
   - "export PATH=$TRAVIS_BUILD_DIR/python/bin:$PATH"
-  - "export PYTHONPATH=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages:$PYTHONPATH:$NTA/lib/python$PY_VER_SHORT/site-packages"
+  - "export PYTHONPATH=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages:$PYTHONPATH:$NTA/lib/python$PY_VER/site-packages"
   - "export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/python/lib:$LD_LIBRARY_PATH"
-  - "ln -s $TRAVIS_BUILD_DIR/python/bin/python$PY_VER_SHORT $TRAVIS_BUILD_DIR/python/bin/python"
+  #- "ln -s $TRAVIS_BUILD_DIR/python/bin/python$PY_VER_SHORT $TRAVIS_BUILD_DIR/python/bin/python"
   # Workaround for multiprocessing.Queue SemLock error from run_opf_bechmarks_test.
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
+  - which python
+  - python --version
   # Install setuptools + pip
   - wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python
   # - (wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz && tar xzvf setuptools-3.4.4.tar.gz && cd setuptools-3.4.4 && python setup.py install --prefix=$TRAVIS_BUILD_DIR/python)
   # - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin pip
   # Install NuPIC python dependencies
-  - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
+  - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
   - virtualenv --python=$TRAVIS_BUILD_DIR/python/bin/python .
   - source bin/activate
   - pip install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
@@ -57,7 +61,7 @@ install:
   - "cd $TRAVIS_BUILD_DIR/build/scripts"
   - "cmake --version"
   # Build NuPIC
-  - "PYTHON=$TRAVIS_BUILD_DIR/python/bin/python cmake $NUPIC -DPYTHON_LIBRARY=$TRAVIS_BUILD_DIR/python/lib/libpython$PY_VER_SHORT.so -DPROJECT_BUILD_RELEASE_DIR:STRING=$NTA"
+  - "PYTHON=$TRAVIS_BUILD_DIR/python/bin/python cmake $NUPIC -DPROJECT_BUILD_RELEASE_DIR:STRING=$NTA"
   - "make -j3"
   - "cd"
 
