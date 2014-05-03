@@ -46,22 +46,22 @@ install:
   # Workaround for multiprocessing.Queue SemLock error from run_opf_bechmarks_test.
   # See: https://github.com/travis-ci/travis-cookbooks/issues/155
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
-  - which python
-  - python --version
+  - which python$PY_VER
+  - python$PY_VER --version
   # Install setuptools + pip
-  - wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python
+  - wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O - | python$PY_VER
   # - (wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz && tar xzvf setuptools-3.4.4.tar.gz && cd setuptools-3.4.4 && python setup.py install --prefix=$TRAVIS_BUILD_DIR/python)
   # - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER_SHORT/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin pip
   # Install NuPIC python dependencies
-  - easy_install --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
-  - virtualenv --python=$TRAVIS_BUILD_DIR/python/bin/python .
+  - easy_install-$PY_VER_SHORT --install-dir=$TRAVIS_BUILD_DIR/python/lib/python$PY_VER/site-packages --script-dir=$TRAVIS_BUILD_DIR/python/bin virtualenv
+  - virtualenv-$PY_VER --python=$TRAVIS_BUILD_DIR/python/bin/python .
   - source bin/activate
-  - pip install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
+  - pip-$PY_VER install -q -r $NUPIC/external/common/requirements.txt --install-option="--prefix=$TRAVIS_BUILD_DIR/python"
   - "mkdir -p $TRAVIS_BUILD_DIR/build/scripts"
   - "cd $TRAVIS_BUILD_DIR/build/scripts"
   - "cmake --version"
   # Build NuPIC
-  - "PYTHON=$TRAVIS_BUILD_DIR/python/bin/python cmake $NUPIC -DPROJECT_BUILD_RELEASE_DIR:STRING=$NTA"
+  - "PYTHON=`which python-$PY_VER` cmake $NUPIC -DPROJECT_BUILD_RELEASE_DIR:STRING=$NTA"
   - "make -j3"
   - "cd"
 
