@@ -18,6 +18,13 @@
 #
 # http://numenta.org/licenses/
 # ----------------------------------------------------------------------
+import sys
 
-#"""
-rootDir = ''
+# Jython doesn't yet support modules written in C/C++, like engine_internal
+if not sys.platform.startswith('java'):
+  from nupic.bindings import engine_internal
+
+import os
+rootDir = os.path.normpath(os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "../../../.."))
