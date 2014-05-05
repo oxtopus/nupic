@@ -855,7 +855,7 @@ endif()
 ############################################################################################################################
 
 # Copy the pieces of nupic that we want
-copy_directory(${PROJECT_SOURCE_DIR}/py/nupic ${PYTHON_SITE_PACKAGES_DIR}/nupic)
+copy_directory(${PROJECT_SOURCE_DIR}/nupic ${PYTHON_SITE_PACKAGES_DIR}/nupic)
 
 # Copy examples
 copy_directory(${PROJECT_SOURCE_DIR}/examples/prediction ${PROJECT_BUILD_RELEASE_DIR}/share/prediction)
