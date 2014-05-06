@@ -60,7 +60,7 @@ Set the following environment variables in your `~/.bashrc` file. `$NUPIC` is th
 
 If you want NuPIC only for your apps consume it, simply do this:
 
-    pip nupic install
+    pip install nupic
 
 Once it is installed, you can import NuPIC library to your python script using:
 
