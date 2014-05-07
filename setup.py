@@ -21,11 +21,11 @@ for arg in sys.argv:
   if ("install" in arg) or ("build" in arg):
     mustBuild = True
   elif ("cmake_options" in arg) or ("make_options" in arg):
-    option = arg.split("=")
+    (option, _, rhs) = arg.partition("=")
     if option[0] == "--cmake_options":
-        cmakeOptions = option[1]
+        cmakeOptions = rhs
     if option[0] == "--make_options":
-        makeOptions = option[1]
+        makeOptions = rhs
     sys.argv.remove(arg)
 
 
