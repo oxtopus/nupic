@@ -19,6 +19,7 @@
  * http://numenta.org/licenses/
  * ---------------------------------------------------------------------
  */
+#define override
 
 %module(package="nupic.bindings") algorithms
 
