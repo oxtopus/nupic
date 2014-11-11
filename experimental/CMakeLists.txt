@@ -269,10 +269,10 @@ set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${REPOSITORY_DIR}/external/${N
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${REPOSITORY_DIR}/external/common/include")
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${NUPIC_CORE}/include")
 
-find_package(SWIG REQUIRED
-             HINTS ${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}/bin
-                   ${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}
-                   "${REPOSITORY_DIR}/external/common/share/swig/3.0.2/")
+#find_package(SWIG REQUIRED
+#             HINTS ${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}/bin
+#                   ${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}
+#                   "${REPOSITORY_DIR}/external/common/share/swig/3.0.2/")
 
 include(${SWIG_USE_FILE})
 
