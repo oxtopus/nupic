@@ -255,7 +255,7 @@ set_target_properties(${LIB_DYNAMIC_CPPREGION} PROPERTIES LINK_FLAGS "-m${BITNES
 # SWIG
 #
 set(SWIG_EXECUTABLE "${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}/bin/swig" CACHE STRING "Swig executable")
-set(SWIG_DIR "${REPOSITORY_DIR}" CACHE STRING "Swig dir")
+set(SWIG_DIR "${REPOSITORY_DIR}/external/common/share/swig/3.0.2" CACHE STRING "Swig dir")
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -I${REPOSITORY_DIR}")
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -I${REPOSITORY_DIR}/include")
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -I${PROJECT_BUILD_INCLUDE_DIR}")
@@ -269,12 +269,7 @@ set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${NUPIC_CORE}/include")
 
 include(${CMAKE_ROOT}/Modules/UseSWIG.cmake)
 
-#find_package(SWIG REQUIRED
-#             HINTS ${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}/bin
-#                   ${REPOSITORY_DIR}/external/${PLATFORM}${BITNESS}
-#                   "${REPOSITORY_DIR}/external/common/share/swig/3.0.2/")#
-
-#include(${SWIG_USE_FILE})
+find_package(SWIG REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
