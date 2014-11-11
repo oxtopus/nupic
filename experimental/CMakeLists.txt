@@ -269,8 +269,6 @@ set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${NUPIC_CORE}/include")
 
 include(${CMAKE_ROOT}/Modules/UseSWIG.cmake)
 
-find_package(SWIG REQUIRED)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(CMAKE_SWIG_FLAGS
