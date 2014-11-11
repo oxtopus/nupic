@@ -23,7 +23,7 @@
 #   Austin Marshall (amarshall@numenta.com): On-going maintenance
 # --------------------------------------------------------------------------------------------------------------------------
 
-
+message(FATAL_ERROR ${CMAKE_MODULE_PATH})
 
 cmake_minimum_required(VERSION 2.8)
 project(nupic CXX)
