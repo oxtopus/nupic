@@ -156,10 +156,10 @@ set(COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -fvisibility=hidden -Wall -Wre
 
 set(LIB_STATIC_SUPPORT py_support)
 add_library(${LIB_STATIC_SUPPORT}
-            ../extensions/py_support/NumpyVector.cpp
-            ../extensions/py_support/PyArray.cpp
-            ../extensions/py_support/PyHelpers.cpp
-            ../extensions/py_support/PythonStream.cpp)
+            ${REPOSITORY_DIR}/extensions/py_support/NumpyVector.cpp
+            ${REPOSITORY_DIR}/extensions/py_support/PyArray.cpp
+            ${REPOSITORY_DIR}/extensions/py_support/PyHelpers.cpp
+            ${REPOSITORY_DIR}/extensions/py_support/PythonStream.cpp)
 set_target_properties(${LIB_STATIC_SUPPORT} PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS})
 set_target_properties(${LIB_STATIC_SUPPORT} PROPERTIES LINK_FLAGS "-m${BITNESS} {STDLIB}")
 
@@ -239,7 +239,7 @@ set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -lyaml-cpp")
 
 set(EXECUTABLE_HTMTEST testpyhtm)
 set(LIBRARIES ${LIB_STATIC_SUPPORT})
-add_Executable(${EXECUTABLE_HTMTEST} ../extensions/htmtest/htmtest.cpp)
+add_executable(${EXECUTABLE_HTMTEST} ${REPOSITORY_DIR}/extensions/htmtest/htmtest.cpp)
 target_link_libraries(${EXECUTABLE_HTMTEST} ${LIB_STATIC_NUPICCORE})
 set_target_properties(${EXECUTABLE_HTMTEST}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
@@ -251,8 +251,8 @@ add_custom_target(tests_htm
 set(LIB_DYNAMIC_CPPREGION cpp_region)
 add_library(${LIB_DYNAMIC_CPPREGION}
             SHARED
-            ../extensions/cpp_region/PyRegion.cpp
-            ../extensions/cpp_region/unittests/PyHelpersTest.cpp)
+            ${REPOSITORY_DIR}/extensions/cpp_region/PyRegion.cpp
+            ${REPOSITORY_DIR}/extensions/cpp_region/unittests/PyHelpersTest.cpp)
 target_link_libraries(${LIB_DYNAMIC_CPPREGION}
                       dl
                       python${PYTHON_VERSION}
@@ -320,36 +320,41 @@ set(SWIG_COMMON_LIBRARIES
     ${LIB_STATIC_SUPPORT})
 
 set(LIB_SHARED_ENGINEINTERNAL engine_internal)
-set_source_files_properties(../extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ../extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
-swig_add_module(${LIB_SHARED_ENGINEINTERNAL} python ../extensions/bindings/py/engine_internal/EngineInternalPy.i)
+set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
+                python
+                ${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
 swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_MATH math)
-set_source_files_properties(../extensions/bindings/py/math/MathPy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ../extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
-swig_add_module(${LIB_SHARED_MATH} python ../extensions/bindings/py/math/MathPy.i ../extensions/bindings/py/math/PySparseTensor.cpp)
+set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+swig_add_module(${LIB_SHARED_MATH}
+                python
+                ${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i
+                ${REPOSITORY_DIR}/extensions/bindings/py/math/PySparseTensor.cpp)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
 swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_ALGORITHMS algorithms)
-set_source_files_properties(../extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ../extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
-swig_add_module(${LIB_SHARED_ALGORITHMS} python ../extensions/bindings/py/algorithms/AlgorithmsPy.i)
+set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+swig_add_module(${LIB_SHARED_ALGORITHMS} python ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
 swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_IORANGE iorange)
-set_source_files_properties(../extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ../extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
-swig_add_module(${LIB_SHARED_IORANGE} python ../extensions/bindings/py/iorange/IorangePy.i)
+set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+swig_add_module(${LIB_SHARED_IORANGE} python ${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
