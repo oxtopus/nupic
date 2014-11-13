@@ -46,6 +46,7 @@ endfunction()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(PLATFORM "darwin")
   set(STDLIB "-stdlib=libc++")
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.7")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(PLATFORM "linux")
   set(STDLIB "")
@@ -147,10 +148,11 @@ include_directories(SYSTEM
                     ${CMAKE_INCLUDE_PATH}
                     ${NUMPY_INCLUDE_DIR})
 
-set(COMPILE_FLAGS "-fPIC") # `position independent code`, required for shared libraries
-set(COMPILE_FLAGS "${COMPILE_FLAGS} -std=c++11") # Adhere to c++11 spec
-set(COMPILE_FLAGS "${COMPILE_FLAGS} -m${BITNESS}") # Generate 32 or 64 bit code
-
+set(COMMON_COMPILE_FLAGS "-fPIC") # `position independent code`, required for shared libraries
+set(COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -std=c++11") # Adhere to c++11 spec
+set(COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} ${STDLIB}") # Adhere to c++11 spec
+set(COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -m${BITNESS}") # Generate 32 or 64 bit code
+set(COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -fvisibility=hidden -Wall -Wreturn-type -Wunused -Wno-unused-parameter")
 
 set(LIB_STATIC_SUPPORT py_support)
 add_library(${LIB_STATIC_SUPPORT}
@@ -158,6 +160,9 @@ add_library(${LIB_STATIC_SUPPORT}
             ../extensions/py_support/PyArray.cpp
             ../extensions/py_support/PyHelpers.cpp
             ../extensions/py_support/PythonStream.cpp)
+set_target_properties(${LIB_STATIC_SUPPORT} PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS})
+set_target_properties(${LIB_STATIC_SUPPORT} PROPERTIES LINK_FLAGS "-m${BITNESS} {STDLIB}")
+
 
 if(BUILD_NUPIC_CORE)
   # User has not specified NUPIC_CORE location, build it from scratch
@@ -170,8 +175,6 @@ if(BUILD_NUPIC_CORE)
   endif()
   read_variable_from_file("${MODULES_FILE_CONTENT}" "NUPIC_CORE_REMOTE" NUPIC_CORE_REMOTE)
   read_variable_from_file("${MODULES_FILE_CONTENT}" "NUPIC_CORE_COMMITISH" NUPIC_CORE_COMMITISH)
-
-
 
   # checkout git dependency
   if (NOT EXISTS ${submodule_dir})
@@ -222,22 +225,25 @@ endif()
 
 find_library(LIB_STATIC_GTEST gtest)
 
-find_library(LIB_STATIC_NUPICCORE nupic_core)
+set(LIB_STATIC_NUPICCORE nupic_core)
+find_library(LIB_STATIC_NUPICCORE_LOC ${LIB_STATIC_NUPICCORE} "${NUPI_CORE}/lib")
 
-set(LIB_STATIC_YAML_CPP yaml-cpp)
-find_library(LIB_STATIC_YAML_CPP_LOC
-             ${LIB_STATIC_YAML_CPP}
-             "../../nupic.core/external/${PLATFORM}${BITNESS}/lib/"
-             NO_DEFAULT_PATH)
-add_library(${LIB_STATIC_YAML_CPP} STATIC IMPORTED)
+add_library(${LIB_STATIC_NUPICCORE_LOC} STATIC IMPORTED)
+
+set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -fPIC")
+set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -m${BITNESS}")
+set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -std=c++11")
+set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} ${STDLIB}")
+set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -L${NUPIC_CORE}/lib")
+set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -lyaml-cpp")
 
 set(EXECUTABLE_HTMTEST testpyhtm)
 set(LIBRARIES ${LIB_STATIC_SUPPORT})
 add_Executable(${EXECUTABLE_HTMTEST} ../extensions/htmtest/htmtest.cpp)
-target_link_libraries(${EXECUTABLE_HTMTEST} ${LIB_STATIC_YAML_CPP_LOC} ${LIB_STATIC_NUPICCORE})
-set_target_properties(${EXECUTABLE_HTMTEST} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
+target_link_libraries(${EXECUTABLE_HTMTEST} ${LIB_STATIC_NUPICCORE})
 set_target_properties(${EXECUTABLE_HTMTEST}
-                      PROPERTIES LINK_FLAGS "-m${BITNESS} ${STDLIB}")
+                      PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
+                                 LINK_FLAGS "${COMMON_LINK_FLAGS}")
 add_custom_target(tests_htm
                   COMMAND ${EXECUTABLE_HTMTEST}
                   DEPENDS ${EXECUTABLE_HTMTEST})
@@ -247,9 +253,15 @@ add_library(${LIB_DYNAMIC_CPPREGION}
             SHARED
             ../extensions/cpp_region/PyRegion.cpp
             ../extensions/cpp_region/unittests/PyHelpersTest.cpp)
-target_link_libraries(${LIB_DYNAMIC_CPPREGION} ${LIB_STATIC_SUPPORT} ${LIB_STATIC_GTEST} ${LIB_STATIC_YAML_CPP_LOC} ${LIB_STATIC_NUPICCORE})
-set_target_properties(${LIB_DYNAMIC_CPPREGION} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
-set_target_properties(${LIB_DYNAMIC_CPPREGION} PROPERTIES LINK_FLAGS "-m${BITNESS} ${STDLIB} -L${PYTHON_LIBRARY_DIR}/config -ldl -lpython${PYTHON_VERSION}")
+target_link_libraries(${LIB_DYNAMIC_CPPREGION}
+                      dl
+                      python${PYTHON_VERSION}
+                      ${LIB_STATIC_SUPPORT}
+                      ${LIB_STATIC_GTEST}
+                      ${LIB_STATIC_NUPICCORE})
+set_target_properties(${LIB_DYNAMIC_CPPREGION}
+                      PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
 
 #
 # SWIG
@@ -266,6 +278,7 @@ set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${REPOSITORY_DIR}/extensions/c
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${REPOSITORY_DIR}/external/${NTA_PLATFORM_OS}/include")
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${REPOSITORY_DIR}/external/common/include")
 set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${NUPIC_CORE}/include")
+set(NTA_INCLUDEFLAGS "${NTA_INCLUDEFLAGS} -isystem${NUPIC_CORE}/include/yaml-cpp")
 
 include(${CMAKE_ROOT}/Modules/UseSWIG.cmake)
 
@@ -299,29 +312,48 @@ set(CMAKE_SWIG_FLAGS
     -I${SWIG_DIR}/python
     -I${SWIG_DIR})
 
+set(SWIG_COMMON_LIBRARIES
+    ${PYTHON_LIBRARIES}
+    dl
+    python${PYTHON_VERSION}
+    ${LIB_STATIC_NUPICCORE}
+    ${LIB_STATIC_SUPPORT})
+
 set(LIB_SHARED_ENGINEINTERNAL engine_internal)
 set_source_files_properties(../extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ../extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_ENGINEINTERNAL} python ../extensions/bindings/py/engine_internal/EngineInternalPy.i)
-swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${PYTHON_LIBRARIES} dl python${PYTHON_VERSION} ${LIB_STATIC_SUPPORT} ${LIB_STATIC_YAML_CPP_LOC} ${LIB_STATIC_NUPICCORE})
+set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
+                      PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_MATH math)
 set_source_files_properties(../extensions/bindings/py/math/MathPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ../extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_MATH} python ../extensions/bindings/py/math/MathPy.i ../extensions/bindings/py/math/PySparseTensor.cpp)
-swig_link_libraries(${LIB_SHARED_MATH} ${PYTHON_LIBRARIES} dl python${PYTHON_VERSION} ${LIB_STATIC_SUPPORT} ${LIB_STATIC_YAML_CPP_LOC} ${LIB_STATIC_NUPICCORE})
+set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
+                      PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_ALGORITHMS algorithms)
 set_source_files_properties(../extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ../extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_ALGORITHMS} python ../extensions/bindings/py/algorithms/AlgorithmsPy.i)
-swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${PYTHON_LIBRARIES} dl python${PYTHON_VERSION} ${LIB_STATIC_SUPPORT} ${LIB_STATIC_YAML_CPP_LOC} ${LIB_STATIC_NUPICCORE})
+set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
+                      PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_IORANGE iorange)
 set_source_files_properties(../extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ../extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_IORANGE} python ../extensions/bindings/py/iorange/IorangePy.i)
-swig_link_libraries(${LIB_SHARED_IORANGE} ${PYTHON_LIBRARIES} dl python${PYTHON_VERSION} ${LIB_STATIC_SUPPORT} ${LIB_STATIC_YAML_CPP_LOC} ${LIB_STATIC_NUPICCORE})
+set_target_properties(${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}
+                      PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+swig_link_libraries(${LIB_SHARED_IORANGE} ${SWIG_COMMON_LIBRARIES})
 
 #
 # Custom targets
@@ -373,12 +405,12 @@ install(TARGETS
         ${LIB_DYNAMIC_CPPREGION}
         DESTINATION ${REPOSITORY_DIR}/nupic)
 install(FILES
-        "${PROJECT_BINARY_DIR}/_${LIB_SHARED_ENGINEINTERNAL}.so"
+        "${PROJECT_BINARY_DIR}/${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}.so"
         "${PROJECT_BINARY_DIR}/${LIB_SHARED_ENGINEINTERNAL}.py"
-        "${PROJECT_BINARY_DIR}/_${LIB_SHARED_MATH}.so"
+        "${PROJECT_BINARY_DIR}/${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}.so"
         "${PROJECT_BINARY_DIR}/${LIB_SHARED_MATH}.py"
-        "${PROJECT_BINARY_DIR}/_${LIB_SHARED_ALGORITHMS}.so"
+        "${PROJECT_BINARY_DIR}/${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}.so"
         "${PROJECT_BINARY_DIR}/${LIB_SHARED_ALGORITHMS}.py"
-        "${PROJECT_BINARY_DIR}/_${LIB_SHARED_IORANGE}.so"
+        "${PROJECT_BINARY_DIR}/${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}.so"
         "${PROJECT_BINARY_DIR}/${LIB_SHARED_IORANGE}.py"
         DESTINATION ${REPOSITORY_DIR}/nupic/bindings)
