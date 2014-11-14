@@ -1,3 +1,3 @@
 # Default nupic.core dependencies (override in optional .nupic_config)
 NUPIC_CORE_REMOTE = 'git://github.com/oxtopus/nupic.core.git'
-NUPIC_CORE_COMMITISH = '362eabdc53779d93dfde7eaa2ecfc542f9972d69'
+NUPIC_CORE_COMMITISH = '8edb2093254f958236519794507bea8e4e08c594'
