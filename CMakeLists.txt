@@ -247,10 +247,18 @@ set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} ${STDLIB}")
 set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -L${NUPIC_CORE}/lib")
 set(COMMON_LINK_FLAGS "${COMMON_LINK_FLAGS} -lyaml-cpp")
 
+set(COMMON_LIBS ${LIB_STATIC_NUPICCORE})
+if("${PLATFORM}" STREQUAL "linux")
+  list(APPEND COMMON_LIBS pthread dl)
+elseif("${PLATFORM}" STREQUAL "darwin")
+  set(COMPILE_FLAGS "${COMPILE_FLAGS} -O3")
+endif()
+
+
 set(EXECUTABLE_HTMTEST testpyhtm)
 set(LIBRARIES ${LIB_STATIC_SUPPORT})
 add_executable(${EXECUTABLE_HTMTEST} extensions/htmtest/htmtest.cpp)
-target_link_libraries(${EXECUTABLE_HTMTEST} ${LIB_STATIC_NUPICCORE})
+target_link_libraries(${EXECUTABLE_HTMTEST} ${COMMON_LIBS})
 set_target_properties(${EXECUTABLE_HTMTEST}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS "${COMMON_LINK_FLAGS}")
@@ -268,7 +276,7 @@ target_link_libraries(${LIB_DYNAMIC_CPPREGION}
                       python${PYTHON_VERSION}
                       ${LIB_STATIC_SUPPORT}
                       ${LIB_STATIC_GTEST}
-                      ${LIB_STATIC_NUPICCORE})
+                      ${COMMON_LIBS})
 set_target_properties(${LIB_DYNAMIC_CPPREGION}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
@@ -278,7 +286,6 @@ set_target_properties(${LIB_DYNAMIC_CPPREGION}
 #
 set(SWIG_EXECUTABLE "${PROJECT_SOURCE_DIR}/external/${PLATFORM}${BITNESS}/bin/swig" CACHE STRING "Swig executable")
 set(SWIG_DIR "${PROJECT_SOURCE_DIR}/external/common/share/swig/3.0.2" CACHE STRING "Swig dir")
-set(CMAKE_SWIG_OUTDIR ${PROJECT_BINARY_DIR})
 set(PROJECT_BUILD_TEMP_DIR ${PROJECT_SOURCE_DIR}/temp)
 # CMAKE_CURRENT_BINARY_DIR is used by swig module for put wrappers on, so don't erase this line!
 set(CMAKE_CURRENT_BINARY_DIR ${PROJECT_BUILD_TEMP_DIR})
@@ -340,15 +347,10 @@ set_property(SOURCE extensions/bindings/py/engine_internal/EngineInternalPy.i PR
 swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
                 python
                 extensions/bindings/py/engine_internal/EngineInternalPy.i)
-message(STATUS ${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME})
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS}
                                  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
-  set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${PROJECT_BINARY_DIR})
-endforeach()
 swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_MATH math)
@@ -363,10 +365,6 @@ set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS}
                                  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
-  set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${PROJECT_BINARY_DIR})
-endforeach()
 swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_ALGORITHMS algorithms)
@@ -378,10 +376,6 @@ set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS}
                                  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
-  set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${PROJECT_BINARY_DIR})
-endforeach()
 swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_IORANGE iorange)
@@ -393,10 +387,6 @@ set_target_properties(${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS}
                                  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
-  set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${PROJECT_BINARY_DIR})
-endforeach()
 swig_link_libraries(${LIB_SHARED_IORANGE} ${SWIG_COMMON_LIBRARIES})
 
 #
