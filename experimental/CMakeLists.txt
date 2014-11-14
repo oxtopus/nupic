@@ -321,6 +321,9 @@ set(SWIG_COMMON_LIBRARIES
     ${LIB_STATIC_NUPICCORE}
     ${LIB_STATIC_SUPPORT})
 
+message(STATUS ${REPOSITORY_DIR})
+message(STATUS ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i)
+
 set(LIB_SHARED_ENGINEINTERNAL engine_internal)
 set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
