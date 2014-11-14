@@ -88,7 +88,8 @@ def buildExtensionsNupic():
   # Prepare directories to the CMake process
   sourceDir = repositoryDir
   buildScriptsDir = repositoryDir + "/build/scripts"
-  shutil.rmtree(buildScriptsDir)
+  if os.path.exists(buildScriptsDir):
+    shutil.rmtree(buildScriptsDir)
   os.makedirs(buildScriptsDir)
   os.chdir(buildScriptsDir)
 
