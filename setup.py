@@ -1,3 +1,4 @@
+import shutil
 import sys
 import os
 import subprocess
@@ -85,10 +86,10 @@ def buildExtensionsNupic():
   """
 
   # Prepare directories to the CMake process
-  sourceDir = repositoryDir + "/experimental"
+  sourceDir = repositoryDir
   buildScriptsDir = repositoryDir + "/build/scripts"
-  if not os.path.exists(buildScriptsDir):
-    os.makedirs(buildScriptsDir)
+  shutil.rmtree(buildScriptsDir)
+  os.makedirs(buildScriptsDir)
   os.chdir(buildScriptsDir)
 
   # Generate build files with CMake
