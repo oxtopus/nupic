@@ -339,7 +339,8 @@ swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
 message(STATUS ${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
-                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS}
+                                 LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_MATH math)
@@ -351,7 +352,8 @@ swig_add_module(${LIB_SHARED_MATH}
                 extensions/bindings/py/math/PySparseTensor.cpp)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
-                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS}
+                                 LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_ALGORITHMS algorithms)
@@ -360,7 +362,8 @@ set_property(SOURCE extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SW
 swig_add_module(${LIB_SHARED_ALGORITHMS} python extensions/bindings/py/algorithms/AlgorithmsPy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
-                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS}
+                                 LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_IORANGE iorange)
@@ -369,7 +372,8 @@ set_property(SOURCE extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLA
 swig_add_module(${LIB_SHARED_IORANGE} python extensions/bindings/py/iorange/IorangePy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
-                                 LINK_FLAGS ${COMMON_LINK_FLAGS})
+                                 LINK_FLAGS ${COMMON_LINK_FLAGS}
+                                 LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 swig_link_libraries(${LIB_SHARED_IORANGE} ${SWIG_COMMON_LIBRARIES})
 
 #
