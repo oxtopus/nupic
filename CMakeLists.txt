@@ -331,6 +331,7 @@ set(SWIG_COMMON_LIBRARIES
     ${LIB_STATIC_SUPPORT})
 
 set(LIB_SHARED_ENGINEINTERNAL engine_internal)
+file(MAKE_DIRECTORY "${PROJECT_BUILD_TEMP_DIR}/extensions/bindings/py/engine_internal")
 set_source_files_properties(extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
@@ -348,6 +349,7 @@ endforeach()
 swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_MATH math)
+file(MAKE_DIRECTORY "${PROJECT_BUILD_TEMP_DIR}/extensions/bindings/py/math")
 set_source_files_properties(extensions/bindings/py/math/MathPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_MATH}
@@ -365,6 +367,7 @@ endforeach()
 swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_ALGORITHMS algorithms)
+file(MAKE_DIRECTORY "${PROJECT_BUILD_TEMP_DIR}/extensions/bindings/py/algorithms")
 set_source_files_properties(extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_ALGORITHMS} python extensions/bindings/py/algorithms/AlgorithmsPy.i)
@@ -379,6 +382,7 @@ endforeach()
 swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_IORANGE iorange)
+file(MAKE_DIRECTORY "${PROJECT_BUILD_TEMP_DIR}/extensions/bindings/py/iorange")
 set_source_files_properties(extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_IORANGE} python extensions/bindings/py/iorange/IorangePy.i)
