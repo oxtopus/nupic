@@ -222,7 +222,8 @@ if(BUILD_NUPIC_CORE)
   # Execute the Make scripts
   execute_process(COMMAND ${USER_MAKE_COMMAND} install -j3
                   WORKING_DIRECTORY ${NUPIC_CORE_SOURCE}/build/scripts
-                  RESULT_VARIABLE EXIT_CODE)
+                  RESULT_VARIABLE EXIT_CODE
+                  OUTPUT_VARIABLE OUTP)
   if(NOT EXIT_CODE EQUAL 0)
     message(FATAL_ERROR "Compiling 'nupic_core' library within ${NUPIC_SOURCE_DIR} failed")
   endif()
@@ -320,7 +321,7 @@ set(CMAKE_SWIG_FLAGS
     -I${NUMPY_INCLUDE_DIR}
     -I${SWIG_DIR}/python
     -I${SWIG_DIR}
-    -outdir ${PROJECT_BINARY_DIR})
+    -outcurrentdir)
 
 set(SWIG_COMMON_LIBRARIES
     ${PYTHON_LIBRARIES}
@@ -335,6 +336,7 @@ set_property(SOURCE extensions/bindings/py/engine_internal/EngineInternalPy.i PR
 swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
                 python
                 extensions/bindings/py/engine_internal/EngineInternalPy.i)
+message(STATUS ${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
