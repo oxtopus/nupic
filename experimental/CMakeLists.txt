@@ -340,8 +340,8 @@ set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy
 set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_MATH}
                 python
-                ${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i
-                ${REPOSITORY_DIR}/extensions/bindings/py/math/PySparseTensor.cpp)
+                extensions/bindings/py/math/MathPy.i
+                extensions/bindings/py/math/PySparseTensor.cpp)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
@@ -350,7 +350,7 @@ swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 set(LIB_SHARED_ALGORITHMS algorithms)
 set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
-swig_add_module(${LIB_SHARED_ALGORITHMS} python ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i)
+swig_add_module(${LIB_SHARED_ALGORITHMS} python extensions/bindings/py/algorithms/AlgorithmsPy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
@@ -359,7 +359,7 @@ swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 set(LIB_SHARED_IORANGE iorange)
 set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
 set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
-swig_add_module(${LIB_SHARED_IORANGE} python ${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i)
+swig_add_module(${LIB_SHARED_IORANGE} python extensions/bindings/py/iorange/IorangePy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
