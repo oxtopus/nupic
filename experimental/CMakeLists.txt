@@ -341,8 +341,8 @@ set_source_files_properties(${CMAKE_REPO_ROOT}/extensions/bindings/py/math/MathP
 set_property(SOURCE ${CMAKE_REPO_ROOT}/extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_MATH}
                 python
-                ${CMAKE_REPO_ROOT}extensions/bindings/py/math/MathPy.i
-                ${CMAKE_REPO_ROOT}extensions/bindings/py/math/PySparseTensor.cpp)
+                ${CMAKE_REPO_ROOT}/extensions/bindings/py/math/MathPy.i
+                ${CMAKE_REPO_ROOT}/extensions/bindings/py/math/PySparseTensor.cpp)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
