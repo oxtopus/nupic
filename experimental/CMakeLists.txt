@@ -113,6 +113,7 @@ execute_process(COMMAND ${PYTHON} -c "import sys;import numpy;sys.stdout.write(n
 
 get_filename_component(REPOSITORY_DIR ${PROJECT_SOURCE_DIR}/.. ABSOLUTE)
 
+set(CMAKE_REPO_ROOT ${REPOSITORY_DIR})
 set(CMAKE_INSTALL_PREFIX ${REPOSITORY_DIR})
 
 if("${NUPIC_CORE}" STREQUAL "")
@@ -325,31 +326,31 @@ message(STATUS ${REPOSITORY_DIR})
 message(STATUS ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i)
 
 set(LIB_SHARED_ENGINEINTERNAL engine_internal)
-set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+set_source_files_properties(${CMAKE_REPO_ROOT}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${CMAKE_REPO_ROOT}/extensions/bindings/py/engine_internal/EngineInternalPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
                 python
-                ${REPOSITORY_DIR}/extensions/bindings/py/engine_internal/EngineInternalPy.i)
+                ${CMAKE_REPO_ROOT}/extensions/bindings/py/engine_internal/EngineInternalPy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
 swig_link_libraries(${LIB_SHARED_ENGINEINTERNAL} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_MATH math)
-set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+set_source_files_properties(${CMAKE_REPO_ROOT}/extensions/bindings/py/math/MathPy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${CMAKE_REPO_ROOT}/extensions/bindings/py/math/MathPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_MATH}
                 python
-                extensions/bindings/py/math/MathPy.i
-                extensions/bindings/py/math/PySparseTensor.cpp)
+                ${CMAKE_REPO_ROOT}extensions/bindings/py/math/MathPy.i
+                ${CMAKE_REPO_ROOT}extensions/bindings/py/math/PySparseTensor.cpp)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_MATH}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS})
 swig_link_libraries(${LIB_SHARED_MATH} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_ALGORITHMS algorithms)
-set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+set_source_files_properties(${CMAKE_REPO_ROOT}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${CMAKE_REPO_ROOT}/extensions/bindings/py/algorithms/AlgorithmsPy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_ALGORITHMS} python extensions/bindings/py/algorithms/AlgorithmsPy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
@@ -357,8 +358,8 @@ set_target_properties(${SWIG_MODULE_${LIB_SHARED_ALGORITHMS}_REAL_NAME}
 swig_link_libraries(${LIB_SHARED_ALGORITHMS} ${SWIG_COMMON_LIBRARIES})
 
 set(LIB_SHARED_IORANGE iorange)
-set_source_files_properties(${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
-set_property(SOURCE ${REPOSITORY_DIR}/extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
+set_source_files_properties(${CMAKE_REPO_ROOT}/extensions/bindings/py/iorange/IorangePy.i PROPERTIES CPLUSPLUS ON)
+set_property(SOURCE ${CMAKE_REPO_ROOT}/extensions/bindings/py/iorange/IorangePy.i PROPERTY SWIG_FLAGS ${CMAKE_SWIG_FLAGS})
 swig_add_module(${LIB_SHARED_IORANGE} python extensions/bindings/py/iorange/IorangePy.i)
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_IORANGE}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
