@@ -336,7 +336,7 @@ set_property(SOURCE extensions/bindings/py/engine_internal/EngineInternalPy.i PR
 swig_add_module(${LIB_SHARED_ENGINEINTERNAL}
                 python
                 extensions/bindings/py/engine_internal/EngineInternalPy.i)
-message(STATUS ${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME)
+message(STATUS ${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME})
 set_target_properties(${SWIG_MODULE_${LIB_SHARED_ENGINEINTERNAL}_REAL_NAME}
                       PROPERTIES COMPILE_FLAGS ${COMMON_COMPILE_FLAGS}
                                  LINK_FLAGS ${COMMON_LINK_FLAGS}
