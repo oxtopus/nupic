@@ -213,9 +213,11 @@ if(BUILD_NUPIC_CORE)
   # Execute the Make scripts
   execute_process(COMMAND ${USER_MAKE_COMMAND} install -j3
                   WORKING_DIRECTORY ${NUPIC_CORE_SOURCE}/build/scripts
-                  RESULT_VARIABLE EXIT_CODE)
+                  RESULT_VARIABLE EXIT_CODE
+                  OUTPUT_VARIABLE BUILD_NUPIC_CORE_OUTP)
   if(NOT EXIT_CODE EQUAL 0)
-    message(FATAL_ERROR "Compiling 'nupic_core' library within ${REPOSITORY_DIR} failed.")
+
+    message(FATAL_ERROR "Compiling 'nupic_core' library within ${REPOSITORY_DIR} failed: ${BUILD_NUPIC_CORE_OUTP}")
   endif()
 
   message(STATUS "Done.")
