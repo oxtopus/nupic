@@ -26,6 +26,10 @@ import unittest2 as unittest
 
 from nupic.encoders.scalarspace import ScalarSpaceEncoder, DeltaEncoder
 
+from nupic.encoders.delta_capnp import DeltaEncoderProto
+from nupic.encoders.adaptivescalar_capnp import AdaptiveScalarEncoderProto
+
+
 
 #########################################################################
 class ScalarSpaceEncoderTest(unittest.TestCase):
@@ -42,7 +46,7 @@ class ScalarSpaceEncoderTest(unittest.TestCase):
                              forced=True)
     self.assertFalse(isinstance(sse, DeltaEncoder))
 
-     
+
 ###########################################
 if __name__ == '__main__':
   unittest.main()
