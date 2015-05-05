@@ -225,17 +225,23 @@ class BitHistory(object):
     proto.learnIteration = self._learnIteration
 
 
-  def read(self, proto):
-    self._id = proto.id
+  @classmethod
+  def read(cls, proto):
+
+    obj = object.__new__(cls)
+
+    obj._id = proto.id
 
     for statProto in proto.stats:
-      statsLen = len(self._stats) - 1
+      statsLen = len(obj._stats) - 1
       if statProto.index > statsLen:
-        self._stats.extend(itertools.repeat(0.0, statProto.index - statsLen))
-      self._stats[statProto.index] = statProto.dutyCycle
+        obj._stats.extend(itertools.repeat(0.0, statProto.index - statsLen))
+      obj._stats[statProto.index] = statProto.dutyCycle
 
-    self._lastTotalUpdate = proto.lastTotalUpdate
-    self._learnIteration = proto.learnIteration
+    obj._lastTotalUpdate = proto.lastTotalUpdate
+    obj._learnIteration = proto.learnIteration
+
+    return obj
 
 
 
@@ -542,7 +548,9 @@ class CLAClassifier(object):
     classifier = object.__new__(cls)
 
     classifier.steps = []
+    maxStep = 1
     for step in proto.steps:
+      maxStep = step if step > maxStep else maxStep
       classifier.steps.append(step)
 
     classifier.alpha = proto.alpha
@@ -550,8 +558,8 @@ class CLAClassifier(object):
     classifier._learnIteration = proto.learnIteration
     classifier._recordNumMinusLearnIteration = proto.recordNumMinusLearnIteration
 
-    classifier._patternNZHistory = deque(maxlen=max(classifier.steps) + 1)
     patternNZHistoryProto = proto.patternNZHistory
+    classifier._patternNZHistory = deque(maxlen=maxSteps + 1)
     learnIteration = classifier._learnIteration - len(patternNZHistoryProto) + 1
     for i in xrange(len(patternNZHistoryProto)):
       classifier._patternNZHistory.append((learnIteration, list(patternNZHistoryProto[i])))
