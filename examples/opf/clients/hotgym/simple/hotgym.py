@@ -25,6 +25,8 @@
 import csv
 import datetime
 import logging
+from multiprocessing import Pool
+import os
 
 from pkg_resources import resource_filename
 
@@ -55,7 +57,7 @@ _METRIC_SPECS = (
                params={'errorMetric': 'altMAPE', 'window': 1000, 'steps': 1}),
 )
 
-_NUM_RECORDS = 1000
+_NUM_RECORDS = 100
 
 
 
@@ -64,7 +66,7 @@ def createModel():
 
 
 
-def runHotgym():
+def runHotgym(attempt):
   model = createModel()
   model.enableInference({'predictedField': 'consumption'})
   metricsManager = MetricsManager(_METRIC_SPECS, model.getFieldInfo(),
@@ -90,8 +92,14 @@ def runHotgym():
       if isLast:
         break
 
+  print "Saving on PID {}".format(os.getpid())
+  model.save(os.path.abspath("./checkpoint-" + str(attempt)))
+  print "Model saved"
 
 
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
-  runHotgym()
+  pool = Pool(2)
+  print "Currently on PID {}".format(os.getpid())
+  pool.map(runHotgym, range(5))
+  print "Back to PID {}".format(os.getpid())
