@@ -22,3 +22,4 @@ pip install wheel
 export CC=gcc
 export CXX=g++
 pip install nupic.bindings-0.3.2.dev0-cp27-cp27mu-linux_x86_64.whl
+python setup.py install
