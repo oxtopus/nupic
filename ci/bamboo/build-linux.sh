@@ -2,7 +2,7 @@
 set -o errexit
 set -o xtrace
 
-# Environment defaults w/ defaults
+# Environment defaults
 if [ -z "${USER}" ]; then
     USER="docker"
 fi
@@ -36,7 +36,7 @@ apt-get install -y \
     python2.7 \
     python2.7-dev
 wget https://bootstrap.pypa.io/get-pip.py -O - | python
-pip install --upgrade setuptools
+pip install --upgrade --ignore-installed setuptools
 pip install wheel
 
 # Install artifacts from previous build
