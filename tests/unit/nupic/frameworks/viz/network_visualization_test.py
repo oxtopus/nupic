@@ -19,17 +19,29 @@
 # http://numenta.org/licenses/
 # ----------------------------------------------------------------------
 
-import unittest2 as unittest
+import unittest
 
 from nupic.engine import Network, Dimensions
-from nupic.frameworks.viz import (NetworkVisualizer,
-                                  GraphVizRenderer,
-                                  NetworkXRenderer)
+
+try:
+  # This is an optional framework and assumes extra dependencies that aren't
+  # normally installed to be available.  If user has not installed those
+  # dependencies an ImportError will be raised and we should skip the tests
+  # accordingly
+  from nupic.frameworks.viz import (NetworkVisualizer,
+                                    GraphVizRenderer,
+                                    NetworkXRenderer)
+except ImportError:
+  NetworkVisualizer = None
+  GraphVizRenderer = None
+  NetworkXRenderer = None
 
 
 
 class NetworkVisualizationTest(unittest.TestCase):
+  @unittest.skipUnless(NetworkVisualizer, "NetworkVisualizer not available.")
   def testVisualizeNetwork(self):
+
     # Create Network instance
     network = Network()
 
@@ -53,6 +65,9 @@ class NetworkVisualizationTest(unittest.TestCase):
 
     # Initialize Network Visualizer
     viz = NetworkVisualizer(network)
+
+    import matplotlib
+    matplotlib.pyplot.ion()
 
     # Render w/ graphviz
     viz.render(renderer=GraphVizRenderer)
